@@ -1,0 +1,36 @@
+[package]
+name = "bevy_entity_graph"
+version = "0.1.0"
+edition = "2024"
+authors = ["Josiah Putman <joshikatsu@gmail.com>"]
+description = "Create graphs of entities in the Bevy game engine.."
+documentation = "https://docs.rs/bevy_entity_graph/latest/bevy_entity_graph"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/Katsutoshii/bevy_entity_graph"
+repository = "https://github.com/Katsutoshii/bevy_entity_graph"
+keywords = ["bevy"]
+readme = "README.md"
+exclude = ["assets/*"]
+
+[dependencies]
+bevy = { version = "0.16", default-features = false, features = [
+    "std",
+    "bevy_log",
+] }
+smallvec = "1.13"
+
+[dev-dependencies]
+bevy = { version = "0.16", features = ["file_watcher"] }
+
+[[example]]
+name = "basic"
+
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+strip = "debuginfo"
+
+# Enable max optimizations for dependencies, but not for our code:
+[profile.dev.package."*"]
+debug = false
+opt-level = 3
