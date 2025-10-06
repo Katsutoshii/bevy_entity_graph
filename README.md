@@ -13,14 +13,14 @@ Features:
 ## Usage
 
 ```rs
-use bevy_entity_graph::{ConnectEvent, Connections, EntityGraphPlugin, InConnectedComponent};
+use bevy_entity_graph::{ConnectMessage, Connections, EntityGraphPlugin, InConnectedComponent};
 
 fn my_system(mut commands: Commands, mut connect_events: EventWriter<ConnectEvent>) {
   // Spawn some entities with Connections.
   let e1 = commands.spawn((Connections::default(), ...)).id();
   let e2 = commands.spawn((Connections::default(), ...)).id();
   // Connect them.
-  connect_events.write(ConnectEvent((e1, e2)));
+  connect_events.write(ConnectMessage((e1, e2)));
 }
 ```
 
@@ -30,4 +30,5 @@ See `examples` for a working demo.
 
 | bevy | bevy_entity_graph |
 | ---- | ----------------- |
+| 0.17 | 0.2.0             |
 | 0.16 | 0.1.0             |

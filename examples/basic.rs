@@ -3,26 +3,23 @@ use bevy::{
     DefaultPlugins,
     app::{App, Startup, Update},
     asset::Assets,
+    camera::{Camera2d, ClearColor},
     color::{
         Color,
         palettes::css::{BLUE, RED, WHITE},
     },
-    core_pipeline::core_2d::Camera2d,
     ecs::{
         component::Component,
-        event::EventWriter,
+        message::MessageWriter,
         system::{Commands, Query, ResMut},
     },
     gizmos::gizmos::Gizmos,
     math::{Isometry2d, Vec3Swizzles, primitives::Circle},
-    render::{
-        camera::ClearColor,
-        mesh::{Mesh, Mesh2d},
-    },
-    sprite::{ColorMaterial, MeshMaterial2d},
+    mesh::{Mesh, Mesh2d},
+    sprite_render::{ColorMaterial, MeshMaterial2d},
     transform::components::{GlobalTransform, Transform},
 };
-use bevy_entity_graph::{ConnectEvent, Connections, EntityGraphPlugin, InConnectedComponent};
+use bevy_entity_graph::{ConnectMessage, Connections, EntityGraphPlugin, InConnectedComponent};
 
 fn main() {
     App::new()
@@ -40,7 +37,7 @@ struct Node(usize);
 /// Spawn nodes.
 fn setup(
     mut commands: Commands,
-    mut connect_events: EventWriter<ConnectEvent>,
+    mut connect_events: MessageWriter<ConnectMessage>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
@@ -86,9 +83,9 @@ fn setup(
             MeshMaterial2d(materials.add(ColorMaterial::from_color(WHITE))),
         ))
         .id();
-    connect_events.write(ConnectEvent((e1, e2)));
-    connect_events.write(ConnectEvent((e2, e3)));
-    connect_events.write(ConnectEvent((e3, e4)));
+    connect_events.write(ConnectMessage((e1, e2)));
+    connect_events.write(ConnectMessage((e2, e3)));
+    connect_events.write(ConnectMessage((e3, e4)));
 }
 
 /// Draw the connections between nodes.

@@ -2,10 +2,10 @@ use bevy::{
     app::{App, FixedUpdate, Plugin},
     ecs::{
         entity::Entity,
-        event::{Event, EventReader, EventWriter},
+        message::{Message, MessageReader, MessageWriter},
         schedule::{
             InternedSystemSet, IntoScheduleConfigs, ScheduleConfigs, SystemSet,
-            common_conditions::on_event,
+            common_conditions::on_message,
         },
         system::Query,
     },
@@ -23,14 +23,14 @@ mod connections;
 pub struct EntityGraphPlugin;
 impl Plugin for EntityGraphPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<ConnectEvent>()
-            .add_event::<DisconnectEvent>()
+        app.add_message::<ConnectMessage>()
+            .add_message::<DisconnectMessage>()
             .configure_sets(FixedUpdate, EntityGraphSystem::get_config())
             .add_systems(
                 FixedUpdate,
                 (
-                    ConnectEvent::on_event.run_if(on_event::<ConnectEvent>),
-                    DisconnectEvent::on_event.run_if(on_event::<DisconnectEvent>),
+                    ConnectMessage::on_message.run_if(on_message::<ConnectMessage>),
+                    DisconnectMessage::on_message.run_if(on_message::<DisconnectMessage>),
                 )
                     .chain()
                     .in_set(EntityGraphSystem::UpdateGraph),
@@ -54,15 +54,15 @@ impl EntityGraphSystem {
     }
 }
 
-#[derive(Event, Debug)]
-pub struct ConnectEvent(pub (Entity, Entity));
-impl ConnectEvent {
-    fn on_event(
-        mut events: EventReader<ConnectEvent>,
-        mut updates: EventWriter<ConnectionUpdateEvent>,
+#[derive(Message, Debug)]
+pub struct ConnectMessage(pub (Entity, Entity));
+impl ConnectMessage {
+    fn on_message(
+        mut events: MessageReader<ConnectMessage>,
+        mut updates: MessageWriter<ConnectionUpdateEvent>,
         mut query: Query<&mut Connections>,
     ) {
-        for &ConnectEvent((entity1, entity2)) in events.read() {
+        for &ConnectMessage((entity1, entity2)) in events.read() {
             if let Ok(mut connections) = query.get_mut(entity1) {
                 connections.connect(entity2);
                 updates.write(ConnectionUpdateEvent(entity1));
@@ -79,15 +79,15 @@ impl ConnectEvent {
     }
 }
 
-#[derive(Event, Debug)]
-pub struct DisconnectEvent(pub (Entity, Entity));
-impl DisconnectEvent {
-    fn on_event(
-        mut events: EventReader<DisconnectEvent>,
-        mut updates: EventWriter<ConnectionUpdateEvent>,
+#[derive(Message, Debug)]
+pub struct DisconnectMessage(pub (Entity, Entity));
+impl DisconnectMessage {
+    fn on_message(
+        mut events: MessageReader<DisconnectMessage>,
+        mut updates: MessageWriter<ConnectionUpdateEvent>,
         mut query: Query<&mut Connections>,
     ) {
-        for &DisconnectEvent((entity1, entity2)) in events.read() {
+        for &DisconnectMessage((entity1, entity2)) in events.read() {
             if let Ok(mut connections) = query.get_mut(entity1) {
                 connections.disconnect(entity2);
                 updates.write(ConnectionUpdateEvent(entity1));

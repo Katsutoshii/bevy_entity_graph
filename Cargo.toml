@@ -1,6 +1,6 @@
 [package]
 name = "bevy_entity_graph"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Josiah Putman <joshikatsu@gmail.com>"]
 description = "Create graphs of entities in the Bevy game engine."
@@ -13,14 +13,14 @@ readme = "README.md"
 exclude = ["assets/*"]
 
 [dependencies]
-bevy = { version = "0.16", default-features = false, features = [
+bevy = { version = "0.17", default-features = false, features = [
     "std",
     "bevy_log",
 ] }
 smallvec = "1.13"
 
 [dev-dependencies]
-bevy = { version = "0.16", features = ["file_watcher"] }
+bevy = { version = "0.17", features = ["file_watcher"] }
 
 [[example]]
 name = "basic"

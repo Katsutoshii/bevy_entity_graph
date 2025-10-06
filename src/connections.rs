@@ -1,9 +1,7 @@
 use bevy::{
     app::{App, Plugin},
     ecs::{
-        component::{Component, HookContext},
-        entity::Entity,
-        event::Event,
+        component::Component, entity::Entity, lifecycle::HookContext, message::Message,
         world::DeferredWorld,
     },
     prelude::{Deref, DerefMut},
@@ -15,7 +13,7 @@ pub struct ConnectionsPlugin;
 impl Plugin for ConnectionsPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<Connections>()
-            .add_event::<ConnectionUpdateEvent>();
+            .add_message::<ConnectionUpdateEvent>();
     }
 }
 
@@ -46,5 +44,5 @@ impl Connections {
 }
 
 /// Event alerting that an entity had its connection updated.
-#[derive(Event, Debug)]
+#[derive(Message, Debug)]
 pub struct ConnectionUpdateEvent(pub Entity);

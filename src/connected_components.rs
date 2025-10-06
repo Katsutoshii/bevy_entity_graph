@@ -6,7 +6,7 @@ use bevy::{
         component::Component,
         entity::{Entity, EntityHashSet},
         error::Result,
-        event::EventReader,
+        message::MessageReader,
         name::Name,
         reflect::ReflectComponent,
         schedule::IntoScheduleConfigs,
@@ -78,7 +78,7 @@ impl InConnectedComponent {
     /// The first component should reuse the ID, then saturate.
     /// The second component will try to reuse the ID, realize it's already in use, and then spawn a new connected component.
     pub fn update(
-        mut updates: EventReader<ConnectionUpdateEvent>,
+        mut updates: MessageReader<ConnectionUpdateEvent>,
         in_connected_components: Query<Option<&InConnectedComponent>>,
         connections: Query<&Connections>,
         mut commands: Commands,
